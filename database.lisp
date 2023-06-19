@@ -20,7 +20,7 @@
               :reader db-index-spo)
    (index-pos :initform (make-index #'compare-facts-pos)
               :reader db-index-pos)
-   (index-osp :initform (make-index #'compare-fact-osp)
+   (index-osp :initform (make-index #'compare-facts-osp)
               :reader db-index-osp)))
 
 (defgeneric db-fact (db fact))
@@ -86,8 +86,7 @@
       (db-indexes-delete db fact))))
 
 (defmacro db-each ((var-s var-p var-o) (tree &key start end) &body body)
-  (let ((g!fact (gensym "FACT-"))
-        (g!value (gensym "VALUE-")))
+  (let ((g!fact (gensym "FACT-")))
     `(index-each (,tree *db*)
                  (lambda (,g!fact)
                    (let ((,var-s (fact/v-subject   ,g!fact))
