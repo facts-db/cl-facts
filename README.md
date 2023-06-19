@@ -120,8 +120,3 @@ A transaction ensures that all database operations will succeed or be
 reverted using their respective rollback functions.
 
 Transactions can be nested safely.
-
-
-# TODO
-
-## Replace cl-lessp with cl-compare
