@@ -18,8 +18,8 @@ Requirements
 ------------
 
 You will need :
-* https://github.com/cl-facts/lessp
-* https://github.com/cl-facts/rollback
+* https://git.kmx.io/facts-db/cl-compare
+* https://git.kmx.io/facts-db/cl-rollback
 
 
 Usage
@@ -119,18 +119,13 @@ reverted using their respective rollback functions.
 Transactions can be nested safely.
 
 
-# Licence
+# TODO
 
-cl-facts
+## Replace cl-lessp with cl-compare
 
-Copyright 2011-2022 Thomas de Grivel <thodg@kmx.io>
+## Negative facts specifications
 
-Permission is hereby granted to use this software granted
-the above copyright notice and this permission paragraph
-are included in all copies and substantial portions of this
-software.
-
-THIS SOFTWARE IS PROVIDED "AS-IS" WITHOUT ANY GUARANTEE OF
-PURPOSE AND PERFORMANCE. IN NO EVENT WHATSOEVER SHALL THE
-AUTHOR BE CONSIDERED LIABLE FOR THE USE AND PERFORMANCE OF
-THIS SOFTWARE.
+```
+'((not ?subject ?predicate object1
+                ?predicate2 object2))
+```

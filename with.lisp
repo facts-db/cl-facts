@@ -1,5 +1,5 @@
 ;; cl-facts
-;; Copyright 2011-2022 Thomas de Grivel <thodg@kmx.io>
+;; Copyright 2011, 2023 Thomas de Grivel <thodg@kmx.io>
 ;;
 ;; Permission is hereby granted to use this software granted
 ;; the above copyright notice and this permission paragraph
@@ -72,7 +72,27 @@
                            (cond ((and (null var-s) var-o) 'db-index-spo)
                                  ((null var-p)             'db-index-pos)
                                  (t                        'db-index-osp))
-                           body)))))))
+                           body))))))
+
+  (defun without/iter (spec binding-vars body)
+    (destructuring-bind (not s p o) spec
+      (assert (eq :not not))
+      (let ((var-s (when (binding-p s) (cdr (assoc s binding-vars))))
+            (var-p (when (binding-p p) (cdr (assoc p binding-vars))))
+            (var-o (when (binding-p o) (cdr (assoc o binding-vars)))))
+        (unless (cond ((and var-s var-p var-o)
+                       (with/0 var-s var-p var-o '(return t)))
+                      ((nor var-s var-p var-o)
+                       (with/3 s p o '(return t)))
+                      (t (with/1-2 s p o var-s var-p var-o
+                                   (cond ((and (null var-s) var-o)
+                                          'db-index-spo)
+                                         ((null var-p)
+                                          'db-index-pos)
+                                         (t
+                                          'db-index-osp))
+                                   '(return t))))
+          body)))))
 
 (defmacro with/rec ((spec &rest more-specs) &body body)
   (let* ((bindings (collect-bindings spec))

@@ -1,5 +1,5 @@
 ;; cl-facts
-;; Copyright 2011-2022 Thomas de Grivel <thodg@kmx.io>
+;; Copyright 2011, 2023 Thomas de Grivel <thodg@kmx.io>
 ;;
 ;; Permission is hereby granted to use this software granted
 ;; the above copyright notice and this permission paragraph

@@ -1,5 +1,5 @@
 ;; cl-facts
-;; Copyright 2011-2022 Thomas de Grivel <thodg@kmx.io>
+;; Copyright 2011, 2023 Thomas de Grivel <thodg@kmx.io>
 ;;
 ;; Permission is hereby granted to use this software granted
 ;; the above copyright notice and this permission paragraph
@@ -54,7 +54,7 @@
 
 ;;  Fact specifications
 
-(defun expand-spec (spec)
+(defun expand-positive-spec (spec)
   (destructuring-bind (s p o &rest more-p-o) spec
     (labels ((expand/po (p-o-list result)
                (if (endp p-o-list)
@@ -65,6 +65,26 @@
       (nreverse (expand/po more-p-o
                            (cons `(,s ,p ,o)
                                  nil))))))
+
+(defun expand-negative-spec (spec)
+  (destructuring-bind (not s p o &rest more-p-o) spec
+    (assert (eq :not not))
+    (labels ((expand/po (p-o-list result)
+               (if (endp p-o-list)
+                   result
+                   (destructuring-bind (p o &rest list) p-o-list
+                     (expand/po list (cons `(:not ,s ,p ,o)
+                                           result))))))
+      (nreverse (expand/po more-p-o
+                           (cons `(:not ,s ,p ,o)
+                                 nil))))))
+
+(defun expand-spec (spec)
+  (declare (type sequence spec))
+  (let ((len (length spec)))
+    (if (zerop (mod (- len 3) 2))
+        (expand-positive-spec spec)
+        (expand-negative-spec spec))))
 
 (defun expand-specs (specs)
   "
