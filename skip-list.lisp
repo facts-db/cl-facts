@@ -182,7 +182,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
 
 (defstruct usl
   (spacing 3 :type (positive-fixnum 2))
-  (lessp #'lessp:lessp :type (function (t t) (or t nil)))
+  (compare #'compare:compare :type (function (t t) (or t nil)))
   (head (make-usl-node nil 1) :type usl-node)
   (length 0 :type positive-fixnum))
 
@@ -195,18 +195,17 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
   "Return two values : the predecessor node for VALUE in USL,
 and the stored value if VALUE was found."
   (declare (type usl usl))
-  (with-slots (lessp head) (the usl usl)
+  (with-slots (compare head) (the usl usl)
     (labels ((usl-find/node (node)
                (declare (type usl-node node))
-               ;; We have (lessp node value) => t
+               ;; We have (compare node value) => -1
                (let ((next (usl-node-link node 0)))
                  (if next
                      (let ((next-value (usl-node-value next)))
-                       (if (funcall lessp next-value value)
-                           (usl-find/node next)
-                           (if (funcall lessp value next-value)
-                               (values node nil)
-                               (values node next-value))))
+                       (ecase (funcall compare value next-value)
+                         (-1 (values node nil))
+                         (0 (values node next-value))
+                         (1 (usl-find/node next))))
                      (values node nil)))))
       (usl-find/node head))))
 
@@ -258,11 +257,12 @@ and the stored value if VALUE was found."
 
 (defun usl-each (usl fn &key start end)
   ;;  FIXME: level
-  (with-slots (lessp head) usl
+  (with-slots (compare head) usl
     (labels ((usl-each/node (node)
                (when node
                  (unless (and end
-                              (funcall lessp end (usl-node-value node)))
+                              (= -1 (funcall compare end
+                                             (usl-node-value node))))
                    (funcall fn (usl-node-value node))
                    (usl-each/node (usl-node-link node 0))))))
       (usl-each/node (multiple-value-bind (node found) (usl-find usl start)

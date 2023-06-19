@@ -14,7 +14,7 @@
 (in-package :common-lisp-user)
 
 (defpackage :facts
-  (:use :cl :lessp :local-time :rollback)
+  (:use :cl :compare :local-time :rollback)
   (:export #:anon #:with-anon
            #:with #:bound-p #:collect #:first-bound #:let-with
            #:without

@@ -16,11 +16,11 @@
 ;;  Database
 
 (defclass db ()
-  ((index-spo :initform (make-index #'fact-spo-lessp)
+  ((index-spo :initform (make-index #'compare-facts-spo)
               :reader db-index-spo)
-   (index-pos :initform (make-index #'fact-pos-lessp)
+   (index-pos :initform (make-index #'compare-facts-pos)
               :reader db-index-pos)
-   (index-osp :initform (make-index #'fact-osp-lessp)
+   (index-osp :initform (make-index #'compare-fact-osp)
               :reader db-index-osp)))
 
 (defgeneric db-fact (db fact))

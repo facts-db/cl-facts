@@ -15,37 +15,36 @@
 
 ;;  Facts ordering
 
-(defun lessp/3 (a1 a2 a3 b1 b2 b3)
-  (or (lessp a1 b1)
-      (and (not (lessp b1 a1))
-           (or (lessp a2 b2)
-               (and (not (lessp b2 a2))
-                    (lessp a3 b3))))))
+(defun compare/3 (a1 a2 a3 b1 b2 b3)
+  (ecase (compare a1 b1)
+    (-1 -1)
+    (1 1)
+    (0 (ecase (compare a2 b2)
+         (-1 -1)
+         (1 1)
+         (0 (ecase (compare a3 b3)
+              (-1 -1)
+              (1 1)
+              (0 0)))))))
 
-(defun fact-spo-lessp (a b)
-  (or (null a)
-      (and b
-           (lessp/3 (fact-subject a) (fact-predicate a) (fact-object a)
-                    (fact-subject b) (fact-predicate b) (fact-object b)))))
+(defun compare-facts-spo (a b)
+  (compare/3 (fact-subject a) (fact-predicate a) (fact-object a)
+             (fact-subject b) (fact-predicate b) (fact-object b)))
 
-(defun fact-pos-lessp (a b)
-  (or (null a)
-      (and b
-           (lessp/3 (fact-predicate a) (fact-object a) (fact-subject a)
-                    (fact-predicate b) (fact-object b) (fact-subject b)))))
+(defun compare-facts-pos (a b)
+  (compare/3 (fact-predicate a) (fact-object a) (fact-subject a)
+             (fact-predicate b) (fact-object b) (fact-subject b)))
 
-(defun fact-osp-lessp (a b)
-  (or (null a)
-      (and b
-           (lessp/3 (fact-object a) (fact-subject a) (fact-predicate a)
-                    (fact-object b) (fact-subject b) (fact-predicate b)))))
+(defun compare-facts-osp (a b)
+  (compare/3 (fact-object a) (fact-subject a) (fact-predicate a)
+             (fact-object b) (fact-subject b) (fact-predicate b)))
 
 ;;  Index operations
 
 ;;    skip lists
 
-(defun make-index (lessp)
-  (make-usl :lessp lessp))
+(defun make-index (compare)
+  (make-usl :compare compare))
 
 (defun index-get (index fact)
   (declare (type fact/v fact))

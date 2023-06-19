@@ -251,24 +251,24 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
 ;;  Skip list
 
 (defstruct (usl (:constructor make-usl%))
-  (lessp-fun nil :type (function (t t) (or t nil)))
+  (compare-fun nil :type (function (t t) (or t nil)))
   (head nil :type usl-node)
   (length 0 :type (fixnum* 0))
   (spacing nil :type (fixnum-float 1))
   (height-fun nil :type (function () (fixnum* 1))))
 
-(defun make-usl (&key (lessp #'lessp:lessp) (height 3) (spacing +e+))
-  (make-usl% :lessp-fun lessp :spacing spacing
+(defun make-usl (&key (compare #'compare:compare) (height 3) (spacing +e+))
+  (make-usl% :compare-fun compare :spacing spacing
              :head (make-usl-node nil height)
              :height-fun (usl-random-height-fun height spacing)))
 
 (defun usl-height (usl)
   (usl-node-height (usl-head usl)))
 
-(defun usl-lessp (usl a b)
+(defun usl-compare (usl a b)
   (declare (type usl usl))
   (funcall (the (function (t t) t)
-             (usl-lessp-fun usl))
+                (usl-compare-fun usl))
            a b))
 
 ;;  Find
@@ -285,14 +285,14 @@ PRED if given must be an array, fill it with predecessor usl nodes."
           ((< level 0))
         (do ((n node (usl-node-next n level)))
             ((or (null n)
-                 (not (usl-lessp usl (usl-node-value n) value))))
+                 (< -1 (usl-compare usl (usl-node-value n) value))))
           (setf node n))
         (when (and pred (< level (length pred)))
           (setf (aref pred level) node)))
       (let* ((next (usl-node-next node 0))
              (found (when next
                       (let ((next-value (usl-node-value next)))
-                        (unless (usl-lessp usl value next-value)
+                        (unless (> -1 (usl-compare usl value next-value))
                           value)))))
         found))))
 
@@ -357,7 +357,7 @@ PRED if given must be an array, fill it with predecessor usl nodes."
   (do ((node (usl-node-next (usl-cursor usl start)) (usl-node-next node)))
       ((or (null node)
            (when end
-             (usl-lessp usl end (usl-node-value node)))))
+             (= -1 (usl-compare usl end (usl-node-value node))))))
     (funcall fn (usl-node-value node))))
 
 #+test

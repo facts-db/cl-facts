@@ -67,7 +67,8 @@ testing the presence or absence of triples (facts).
 ```common-lisp
 (defun movie-title (movie)
   (facts:with ((movie :is-a :movie
-                      :title ?title))
+                      :title ?title)
+               (:not movie :is-a :fake))
     (return ?title)))
 ```
 
@@ -76,7 +77,8 @@ is equivalent to
 ```common-lisp
 (defun movie-title (movie)
   (facts:with ((movie :is-a :movie)
-               (movie :title ?title))
+               (movie :title ?title)
+               (:not movie :is-a :fake))
     (return ?title)))
 ```
 
@@ -86,7 +88,8 @@ which is itself equivalent to
 (defun movie-title (movie)
   (facts:with ((movie :is-a :movie))
     (facts:with ((movie :title ?title))
-      (return ?title))))
+      (facts:without ((movie :is-a :fake))
+        (return ?title)))))
 ```
 
 Multiple queries on the same subject can be grouped together easily :
@@ -122,10 +125,3 @@ Transactions can be nested safely.
 # TODO
 
 ## Replace cl-lessp with cl-compare
-
-## Negative facts specifications
-
-```
-'((not ?subject ?predicate object1
-                ?predicate2 object2))
-```

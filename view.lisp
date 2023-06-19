@@ -19,7 +19,7 @@
   ((refresh :initarg refresh
             :reader view-refresh
             :type function)
-   (index :initform (make-usl :lessp lessp)
+   (index :initform (make-usl :compare compare)
           :reader view-index
           :type usl)))
 
