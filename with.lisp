@@ -79,7 +79,7 @@
              (with/dispatch s p o binding-vars body)))
       ((4) (destructuring-bind (not s p o) spec
              (assert (eq :not not))
-             (with/dispatch s p o binding-vars '(return nil)))))))
+             `(without ((,s ,p ,o)) ,@body))))))
 
 (defmacro with/rec ((spec &rest more-specs) &body body)
   (let* ((bindings (collect-bindings spec))
