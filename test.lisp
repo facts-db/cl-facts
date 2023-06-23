@@ -13,33 +13,21 @@
 
 (in-package :facts)
 
-(add ('result 'source ?s)
-     (?s 'id "plop")
-     (?s 'score 42))
+(facts:add ("Blade Runner" :is-a :movie
+                           :director "Ridley Scott"
+                           :actor "Harison Ford"
+                           :actor "Rutger Hauer")
+           ("Snow White" :is-a :movie
+                         :director "William Cottrell"
+                         :director "David Hand"))
 
-(trace replace-bindings collect-bindings% with%)
-(trace make-fact/v fact/v-subject fact/v-predicate fact/v-object)
+(trace with/0 db-each usl-each usl-find)
 
 (with ((?s ?p ?o))
   (format t "~&~S ~S ~S~&" ?s ?p ?o))
 
-(llrbtree:map-tree (lambda (key value)
-                     (format t "~&~S -> ~S~%" key value))
-                   (db-pos-tree *db*)
-                   :START (MAKE-FACT/V NIL nil NIL))
+facts:*db*
 
-(macroexpand-1
- (third
-  (macroexpand-1
-   '(with (('result 'source ?p))
-     (format t "~S~&" ?p)))))
+(untrace usl-compare)
 
-(with (('result 'source ?p)
-       (?p 'id ?id))
-  (return (list ?p ?id)))
-
-(with (('result 'source ?p)
-       (?p 'id ?id)
-       (?p 'score ?score))
-  (format t "~S~%" (list (list ?p 'score ?score)
-                         (list ?p 'id ?id))))
+(clear-db)

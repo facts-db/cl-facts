@@ -28,16 +28,31 @@
               (0 0)))))))
 
 (defun compare-facts-spo (a b)
-  (compare/3 (fact-subject a) (fact-predicate a) (fact-object a)
-             (fact-subject b) (fact-predicate b) (fact-object b)))
+  (cond
+    ((eq a b) 0)
+    ((null a) -1)
+    ((null b) 1)
+    (t
+     (compare/3 (fact-subject a) (fact-predicate a) (fact-object a)
+                (fact-subject b) (fact-predicate b) (fact-object b)))))
 
 (defun compare-facts-pos (a b)
-  (compare/3 (fact-predicate a) (fact-object a) (fact-subject a)
-             (fact-predicate b) (fact-object b) (fact-subject b)))
+  (cond
+    ((eq a b) 0)
+    ((null a) -1)
+    ((null b) 1)
+    (t
+     (compare/3 (fact-predicate a) (fact-object a) (fact-subject a)
+                (fact-predicate b) (fact-object b) (fact-subject b)))))
 
 (defun compare-facts-osp (a b)
-  (compare/3 (fact-object a) (fact-subject a) (fact-predicate a)
-             (fact-object b) (fact-subject b) (fact-predicate b)))
+  (cond
+    ((eq a b) 0)
+    ((null a) -1)
+    ((null b) 1)
+    (t
+     (compare/3 (fact-object a) (fact-subject a) (fact-predicate a)
+                (fact-object b) (fact-subject b) (fact-predicate b)))))
 
 ;;  Index operations
 

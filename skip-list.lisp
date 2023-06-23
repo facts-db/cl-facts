@@ -182,7 +182,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
 
 (defstruct usl
   (spacing 3 :type (positive-fixnum 2))
-  (compare #'compare:compare :type (function (t t) (or t nil)))
+  (compare #'compare:compare :type (function (t t) fixnum))
   (head (make-usl-node nil 1) :type usl-node)
   (length 0 :type positive-fixnum))
 

@@ -37,21 +37,22 @@
 (deftype fact () '(or fact/v fact/l))
 
 (defun fact-subject (f)
-  (if (consp f)
-      (first f)
-      (svref f 0)))
+  (when f
+    (if (consp f)
+        (first f)
+        (svref f 0))))
 
 (defun fact-predicate (f)
-  (declare (type fact f))
-  (if (consp f)
-      (second f)
-      (svref f 1)))
+  (when f
+    (if (consp f)
+        (second f)
+        (svref f 1))))
 
 (defun fact-object (f)
-  (declare (type fact f))
-  (if (consp f)
-      (third f)
-      (svref f 2)))
+  (when f
+    (if (consp f)
+        (third f)
+        (svref f 2))))
 
 (defun fact-equal (a b)
   (and (equal (fact-subject   a) (fact-subject b))

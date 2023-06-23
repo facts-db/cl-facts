@@ -61,38 +61,25 @@
 
 (eval-when (:compile-toplevel :load-toplevel)
 
-  (defun with/iter (spec binding-vars body)
-    (destructuring-bind (s p o) spec
-      (let ((var-s (when (binding-p s) (cdr (assoc s binding-vars))))
-            (var-p (when (binding-p p) (cdr (assoc p binding-vars))))
-            (var-o (when (binding-p o) (cdr (assoc o binding-vars)))))
-        (cond ((and var-s var-p var-o) (with/0 var-s var-p var-o body))
-              ((nor var-s var-p var-o) (with/3 s p o body))
-              (t (with/1-2 s p o var-s var-p var-o
-                           (cond ((and (null var-s) var-o) 'db-index-spo)
-                                 ((null var-p)             'db-index-pos)
-                                 (t                        'db-index-osp))
-                           body))))))
+  (defun with/dispatch (s p o binding-vars body)
+    (let ((var-s (when (binding-p s) (cdr (assoc s binding-vars))))
+          (var-p (when (binding-p p) (cdr (assoc p binding-vars))))
+          (var-o (when (binding-p o) (cdr (assoc o binding-vars)))))
+      (cond ((and var-s var-p var-o) (with/0 var-s var-p var-o body))
+            ((nor var-s var-p var-o) (with/3 s p o body))
+            (t (with/1-2 s p o var-s var-p var-o
+                         (cond ((and (null var-s) var-o) 'db-index-spo)
+                               ((null var-p)             'db-index-pos)
+                               (t                        'db-index-osp))
+                         body)))))
 
-  (defun without/iter (spec binding-vars body)
-    (destructuring-bind (not s p o) spec
-      (assert (eq :not not))
-      (let ((var-s (when (binding-p s) (cdr (assoc s binding-vars))))
-            (var-p (when (binding-p p) (cdr (assoc p binding-vars))))
-            (var-o (when (binding-p o) (cdr (assoc o binding-vars)))))
-        (unless (cond ((and var-s var-p var-o)
-                       (with/0 var-s var-p var-o '(return t)))
-                      ((nor var-s var-p var-o)
-                       (with/3 s p o '(return t)))
-                      (t (with/1-2 s p o var-s var-p var-o
-                                   (cond ((and (null var-s) var-o)
-                                          'db-index-spo)
-                                         ((null var-p)
-                                          'db-index-pos)
-                                         (t
-                                          'db-index-osp))
-                                   '(return t))))
-          body)))))
+  (defun with/iter (spec binding-vars body)
+    (ecase (length spec)
+      ((3) (destructuring-bind (s p o) spec
+             (with/dispatch s p o binding-vars body)))
+      ((4) (destructuring-bind (not s p o) spec
+             (assert (eq :not not))
+             (with/dispatch s p o binding-vars '(return nil)))))))
 
 (defmacro with/rec ((spec &rest more-specs) &body body)
   (let* ((bindings (collect-bindings spec))
@@ -110,7 +97,7 @@
        ,@body)))
 
 (defmacro with (binding-specs &body body)
-  `(with/expanded ,(sort-bindings (expand-specs binding-specs))
+  `(with/expanded ,(expand-specs binding-specs)
      ,@body))
 
 (defmacro bound-p (binding-specs)
