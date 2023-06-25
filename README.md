@@ -54,42 +54,35 @@ Adds facts (triples) to the database. Triples can be grouped by subject.
 The second version with `?movie` will generate an anonymous symbol prefixed with `movie-`.
 It is considered a more clean and efficient way to abstract identifiers.
 
+
 ### FACTS:RM &rest SPECS
+
 ```common-lisp
 (facts:rm (?movie :actor "Harison Ford"))
 ```
+
 
 ### FACTS:WITH SPECS &body BODY
 
 To follow Wittgenstein's view of the world, all queries get turned into
 testing the presence or absence of triples (facts).
 
-```common-lisp
-(defun movie-title (movie)
-  (facts:with ((movie :is-a :movie
-                      :title ?title)
-               (:not movie :is-a :fake))
-    (return ?title)))
-```
-
-is equivalent to
+Variables are prefixed with a question mark symbol "?" and are
+wildcards, matching everything. Nested queries get their variables
+expanded, giving pattern matching abilities. For instance :
 
 ```common-lisp
-(defun movie-title (movie)
-  (facts:with ((movie :is-a :movie)
-               (movie :title ?title)
-               (:not movie :is-a :fake))
-    (return ?title)))
-```
+(with ((?s ?p ?o)
+  (format t "~&~S ~S ~S~&" ?s ?p ?o))
 
-which is itself equivalent to
-
-```common-lisp
-(defun movie-title (movie)
-  (facts:with ((movie :is-a :movie))
-    (facts:with ((movie :title ?title))
-      (facts:without ((movie :is-a :fake))
-        (return ?title)))))
+=>
+"Blade Runner" :ACTOR "Harison Ford"
+"Blade Runner" :ACTOR "Rutger Hauer"
+"Blade Runner" :DIRECTOR "Ridley Scott"
+"Blade Runner" :IS-A :MOVIE
+"Snow White" :DIRECTOR "David Hand"
+"Snow White" :DIRECTOR "William Cottrell"
+"Snow White" :IS-A :MOVIE
 ```
 
 Multiple queries on the same subject can be grouped together easily :
@@ -99,6 +92,31 @@ Multiple queries on the same subject can be grouped together easily :
                      :title ?title
                      :director ?director))
   (format t "~A directed ~A~%" ?director ?title))
+```
+
+Negative facts specifications will remove matching facts from the
+results.
+
+
+```common-lisp
+(with ((?s ?p ?o)
+       (:not ?s :actor "Harison Ford"))
+  (format t "~&~S ~S ~S~&" ?s ?p ?o))
+
+=>
+"Snow White" :DIRECTOR "David Hand"
+"Snow White" :DIRECTOR "William Cottrell"
+"Snow White" :IS-A :MOVIE
+```
+
+
+TODO
+----
+
+ - binding of negation : :not resulting from another binding
+ - barriers / hooks : functions that will be called when a spec is added
+   or removed.
+
 ```
 
 ### FACTS:\*DB\*
