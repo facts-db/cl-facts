@@ -272,14 +272,6 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
                 (usl-compare-fun usl))
            a b))
 
-(defun usl-compare (usl a b)
-  (declare (type usl usl))
-  (let* ((compare-fun (the (function (t t) fixnum)
-                           (usl-compare-fun usl)))
-         (result (funcall compare-fun a b)))
-    (format t "~&USL-COMPARE: ~S ~S ~S => ~S~%" compare-fun a b result)
-    result))
-
 ;;  Find
 
 (defun usl-find (usl value &optional pred)

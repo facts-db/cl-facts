@@ -55,6 +55,18 @@ or either
                    :director "William Cottrell"
                    :director "David Hand"))
 
+(with ((?s ?p ?o))
+  (format t "~&~S ~S ~S~&" ?s ?p ?o))
+FACTS.ANON::MOVIE-0000 :ACTOR "Harison Ford"
+FACTS.ANON::MOVIE-0000 :ACTOR "Rutger Hauer"
+FACTS.ANON::MOVIE-0000 :DIRECTOR "Ridley Scott"
+FACTS.ANON::MOVIE-0000 :IS-A :MOVIE
+FACTS.ANON::MOVIE-0000 :TITLE "Blade Runner"
+FACTS.ANON::MOVIE-0001 :DIRECTOR "David Hand"
+FACTS.ANON::MOVIE-0001 :DIRECTOR "William Cottrell"
+FACTS.ANON::MOVIE-0001 :IS-A :MOVIE
+FACTS.ANON::MOVIE-0001 :TITLE "Snow White"
+=> NIL
 ```
 
 The second version with `?movie` will generate an anonymous symbol prefixed with `movie-`.

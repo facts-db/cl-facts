@@ -22,10 +22,10 @@
 (defun anon (&rest sym-hints)
   (let* ((sym (intern
                (with-output-to-string (out)
-                 (write-string (string-upcase (first sym-hints)))
+                 (write-string (string-upcase (first sym-hints)) out)
                  (dolist (sym-hint (rest sym-hints))
                    (write-char #\- out)
-                   (write-string (string-upcase sym-hint))))
+                   (write-string (string-upcase sym-hint) out)))
                (find-package :facts.anon))))
     (labels ((guess (count)
                (multiple-value-bind (n found) (intern

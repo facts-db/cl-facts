@@ -23,6 +23,19 @@
 
 (untrace with/0 db-each index-each index-find fact/v-subject fact/v-predicate fact/v-object usl-find usl-each make-fact/v)
 
+(facts:add (?movie :is-a :movie
+                   :title "Blade Runner"
+                   :director "Ridley Scott"
+                   :actor "Harison Ford"
+                   :actor "Rutger Hauer"))
+
+(facts:add (?movie :is-a :movie
+                   :title "Snow White"
+                   :director "William Cottrell"
+                   :director "David Hand"))
+
+(untrace with/0 db-each usl-each usl-find)
+
 (with ((?s ?p ?o))
   (format t "~&~S ~S ~S~&" ?s ?p ?o))
 
