@@ -38,6 +38,7 @@ Adds facts (triples) to the database. Triples can be grouped by subject.
            ("Snow White" :is-a :movie
                          :director "William Cottrell"
                          :director "David Hand"))
+
 ```
 
 or either
@@ -53,6 +54,7 @@ or either
                    :title "Snow White and the Seven Dwarfs"
                    :director "William Cottrell"
                    :director "David Hand"))
+
 ```
 
 The second version with `?movie` will generate an anonymous symbol prefixed with `movie-`.
@@ -64,6 +66,7 @@ It is considered a more clean and efficient way to abstract identifiers.
 
 ```common-lisp
 (facts:rm (?movie :actor "Harison Ford"))
+
 ```
 
 ---
@@ -89,6 +92,7 @@ expanded, giving pattern matching abilities. For instance :
 "Snow White" :DIRECTOR "David Hand"
 "Snow White" :DIRECTOR "William Cottrell"
 "Snow White" :IS-A :MOVIE
+
 ```
 
 Multiple queries on the same subject can be grouped together easily :
@@ -98,6 +102,7 @@ Multiple queries on the same subject can be grouped together easily :
                      :title ?title
                      :director ?director))
   (format t "~A directed ~A~%" ?director ?title))
+
 ```
 
 Negative facts specifications will remove matching facts from the
@@ -113,6 +118,7 @@ results.
 "Snow White" :DIRECTOR "David Hand"
 "Snow White" :DIRECTOR "William Cottrell"
 "Snow White" :IS-A :MOVIE
+
 ```
 
 ---
