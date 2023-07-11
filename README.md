@@ -57,6 +57,8 @@ or either
 
 (with ((?s ?p ?o))
   (format t "~&~S ~S ~S~&" ?s ?p ?o))
+
+=> NIL
 FACTS.ANON::MOVIE-0000 :ACTOR "Harison Ford"
 FACTS.ANON::MOVIE-0000 :ACTOR "Rutger Hauer"
 FACTS.ANON::MOVIE-0000 :DIRECTOR "Ridley Scott"
@@ -66,7 +68,6 @@ FACTS.ANON::MOVIE-0001 :DIRECTOR "David Hand"
 FACTS.ANON::MOVIE-0001 :DIRECTOR "William Cottrell"
 FACTS.ANON::MOVIE-0001 :IS-A :MOVIE
 FACTS.ANON::MOVIE-0001 :TITLE "Snow White"
-=> NIL
 ```
 
 The second version with `?movie` will generate an anonymous symbol prefixed with `movie-`.
@@ -114,10 +115,11 @@ Multiple queries on the same subject can be grouped together easily :
                      :title ?title
                      :director ?director))
   (format t "~A directed ~A~%" ?director ?title))
+
+=>
 Ridley Scott directed Blade Runner
 David Hand directed Snow White and the Seven Dwarfs
 William Cottrell directed Snow White and the Seven Dwarfs
-=> (values)
 
 ```
 
