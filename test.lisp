@@ -21,9 +21,13 @@
                          :director "William Cottrell"
                          :director "David Hand"))
 
-(trace with/0 db-each usl-each usl-find)
+(untrace with/0 db-each index-each index-find fact/v-subject fact/v-predicate fact/v-object usl-find usl-each make-fact/v)
 
 (with ((?s ?p ?o))
+  (format t "~&~S ~S ~S~&" ?s ?p ?o))
+
+(with ((?s ?p ?o)
+       (:not ?s :actor "Harison Ford"))
   (format t "~&~S ~S ~S~&" ?s ?p ?o))
 
 facts:*db*
@@ -31,3 +35,19 @@ facts:*db*
 (untrace usl-compare)
 
 (clear-db)
+
+(facts:add (?movie :is-a :movie
+                   :title "Blade Runner"
+                   :director "Ridley Scott"
+                   :actor "Harrison Ford"
+                   :actor "Rutger Hauer"))
+
+(facts:add (?movie :is-a :movie
+                   :title "Snow White and the Seven Dwarfs"
+                   :director "William Cottrell"
+                   :director "David Hand"))
+
+(facts:with ((?movie :is-a :movie
+                     :title ?title
+                     :director ?director))
+  (format t "~A directed ~A~%" ?director ?title))
