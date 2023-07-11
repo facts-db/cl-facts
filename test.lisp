@@ -60,6 +60,16 @@ facts:*db*
                    :director "William Cottrell"
                    :director "David Hand"))
 
+(facts:with ((?movie :is-a :movie))
+  (format t "Movie ~A~%" ?movie))
+
+(trace compare index-compare)
+(untrace usl-compare)
+
+(facts:with ((?movie :is-a :movie
+                     :title ?title))
+  (format t "Movie ~A~%" ?title))
+
 (facts:with ((?movie :is-a :movie
                      :title ?title
                      :director ?director))

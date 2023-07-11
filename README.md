@@ -114,6 +114,10 @@ Multiple queries on the same subject can be grouped together easily :
                      :title ?title
                      :director ?director))
   (format t "~A directed ~A~%" ?director ?title))
+Ridley Scott directed Blade Runner
+David Hand directed Snow White and the Seven Dwarfs
+William Cottrell directed Snow White and the Seven Dwarfs
+=> (values)
 
 ```
 
