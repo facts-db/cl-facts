@@ -13,6 +13,7 @@ It features :
 * logging and replay of transactions to/from disk
 * dumping and loading the database to/from disk
 
+---
 
 Requirements
 ------------
@@ -21,6 +22,7 @@ You will need :
 * https://git.kmx.io/facts-db/cl-compare
 * https://git.kmx.io/facts-db/cl-rollback
 
+---
 
 Usage
 -----
@@ -38,6 +40,8 @@ Adds facts (triples) to the database. Triples can be grouped by subject.
                          :director "David Hand"))
 ```
 
+or either
+
 ```common-lisp
 (facts:add (?movie :is-a :movie
                    :title "Blade Runner"
@@ -54,6 +58,7 @@ Adds facts (triples) to the database. Triples can be grouped by subject.
 The second version with `?movie` will generate an anonymous symbol prefixed with `movie-`.
 It is considered a more clean and efficient way to abstract identifiers.
 
+---
 
 ### FACTS:RM &rest SPECS
 
@@ -61,6 +66,7 @@ It is considered a more clean and efficient way to abstract identifiers.
 (facts:rm (?movie :actor "Harison Ford"))
 ```
 
+---
 
 ### FACTS:WITH SPECS &body BODY
 
@@ -109,27 +115,27 @@ results.
 "Snow White" :IS-A :MOVIE
 ```
 
-
-TODO
-----
-
- - binding of negation : :not resulting from another binding
- - barriers / hooks : functions that will be called when a spec is added
-   or removed.
-
-```
+---
 
 ### FACTS:\*DB\*
 The current facts database.
 
+---
+
 ### FACTS:CLEAR-DB
 Clears the database from every facts.
+
+---
 
 ### FACTS:SAVE-DB &key INTO (READABLY T)
 Dump the database facts into filespec INTO.
 
+---
+
 ### FACTS:LOAD-DB SRC
 Load the facts from SRC into \*db\*.
+
+---
 
 ### FACTS:WITH-TRANSACTION &body BODY
 Enclose BODY database operations into a transaction.
@@ -138,3 +144,12 @@ A transaction ensures that all database operations will succeed or be
 reverted using their respective rollback functions.
 
 Transactions can be nested safely.
+
+---
+
+TODO
+----
+
+ - binding of negation : :not resulting from another binding
+ - barriers / hooks : functions that will be called when a spec is added
+   or removed.
