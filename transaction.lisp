@@ -20,7 +20,7 @@
 (defvar *db-path-defaults* (make-pathname :type "facts"))
 (defvar *db-log-path-defaults* (make-pathname :type "facts-log"))
 (defvar *transaction-vars* nil)
-(defvar *transaction-mutex* (sb-thread:make-mutex :name "transaction-mutex"))
+(defvar *transaction-lock* (bordeaux-threads:make-lock))
 
 (defun transaction-var (value name)
   (let ((cell (rassoc name *transaction-vars* :test #'eq)))
@@ -70,22 +70,21 @@
   (dolist (operation (transaction-log tx))
     (apply #'rollback operation)))
 
-(defmacro with-mutex ((mutex timeout) &body body)
+(defmacro with-mutex ((mutex) &body body)
   (let ((g!mutex (gensym "MUTEX-"))
         (g!result (gensym "RESULT-")))
     `(let ((,g!mutex ,mutex)
            ,g!result)
-       (if (sb-thread:with-mutex (,g!mutex :wait-p t)
+       (if (bordeaux-threads:with-lock-held (,g!mutex)
              (setf ,g!result (progn ,@body))
              t)
            ,g!result
-           (error "Could not acquire ~S for ~D seconds."
-                  ,g!mutex ,timeout)))))
+           (error "Could not acquire ~S." ,g!mutex)))))
 
 (defmacro with-transaction (&body body)
   `(if *transaction*
        (progn ,@body)
-       (with-mutex (*transaction-mutex* 1)
+       (with-mutex (*transaction-mutex*)
          (let ((*transaction* (make-transaction)))
            (unwind-protect (prog1 (progn ,@body)
                              (commit-transaction *transaction*))

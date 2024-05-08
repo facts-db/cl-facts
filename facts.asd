@@ -21,7 +21,7 @@
   :author "Thomas de Grivel <thoxdg@gmail.com>"
   :version "0.2"
   :description "in-memory graph database"
-  :depends-on ("compare" "local-time" "rollback")
+  :depends-on ("bordeaux-threads" "compare" "local-time" "rollback")
   :components
   ((:file "package")
    (:file "fact" :depends-on ("package"))

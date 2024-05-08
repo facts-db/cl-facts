@@ -129,7 +129,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
            (optimize speed))
   (assert (= 2 spacing))
   (lambda ()
-    (do ((level 1 (sb-ext:truly-the fixnum (1+ level))))
+    (do ((level 1 (the fixnum (1+ level))))
         ((or (= level max-level)
              (= (random 4) 3)) ;; 
          level)

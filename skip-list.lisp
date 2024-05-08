@@ -97,7 +97,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
   (declare (type fixnum spacing max-level)
            (optimize speed))
   (assert (= 2 spacing))
-  (do ((level 1 (sb-ext:truly-the fixnum (1+ level))))
+  (do ((level 1 (the fixnum (1+ level))))
       ((or (= level max-level)
            (= (random 4) 3)) ;; 
        level)
@@ -168,7 +168,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
            (optimize (speed 3)))
   (let* ((u spacing)
          (k (the positive-fixnum (random (expt u max-height)))))
-    (do ((uʳ 1 (sb-ext:truly-the positive-fixnum (* u uʳ)))
+    (do ((uʳ 1 (the positive-fixnum (* u uʳ)))
          (r 0 (1+ r)))
         ((< k uʳ)
          (the fixnum (1+ (mod (- max-height r) max-height))))
