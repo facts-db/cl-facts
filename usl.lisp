@@ -234,7 +234,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
   (let ((max-height* (load-time-value #1=2))
         (spacing* (load-time-value #2=+e+))
         (fun* (load-time-value (usl-random-height-fun #1# #2#))))
-    (declare (type (function () (fixnum* 1)) fun*))
+    (declare (type (function () (values (fixnum* 1) &optional)) fun*))
     (unless (and (= max-height* max-height)
                  (= spacing* spacing))
       (setf max-height* max-height
@@ -268,7 +268,7 @@ L1: 50%, L2: 25%, L3: 12.5%, ..."
 
 (defun usl-compare (usl a b)
   (declare (type usl usl))
-  (funcall (the (function (t t) fixnum)
+  (funcall (the (function (t t) (values fixnum &optional))
                 (usl-compare-fun usl))
            a b))
 
