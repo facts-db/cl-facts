@@ -71,20 +71,21 @@
     (apply #'rollback operation)))
 
 (defmacro with-mutex ((mutex) &body body)
-  (let ((g!mutex (gensym "MUTEX-"))
-        (g!result (gensym "RESULT-")))
-    `(let ((,g!mutex ,mutex)
+  (declare (type symbol mutex))
+  (let ((g!result (gensym "RESULT-")))
+    `(let ((,mutex (bordeaux-threads:make-lock
+                    (symbol-name ',mutex)))
            ,g!result)
-       (if (bordeaux-threads:with-lock-held (,g!mutex)
+       (if (bordeaux-threads:with-lock-held (,mutex)
              (setf ,g!result (progn ,@body))
              t)
            ,g!result
-           (error "Could not acquire ~S." ,g!mutex)))))
+           (error "Could not acquire ~S." ',mutex)))))
 
 (defmacro with-transaction (&body body)
   `(if *transaction*
        (progn ,@body)
-       (with-mutex (*transaction-mutex*)
+       (with-mutex (transaction-mutex)
          (let ((*transaction* (make-transaction)))
            (unwind-protect (prog1 (progn ,@body)
                              (commit-transaction *transaction*))
